@@ -1,0 +1,4 @@
+:global .Dashboard {
+  display: none; }
+  :global .Dashboard__link {
+    color: red; }
