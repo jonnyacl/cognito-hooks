@@ -51,17 +51,8 @@ function App() {
         return {
           ...state
         }
-      case 'LOGOUT_REQUEST':
-          Auth.signOut()
-            .then(() => {
-              dispatch({
-                type: "LOGOUT_SUCCESS"
-              });
-            });
-          return {
-            ...state
-          }
       case 'LOGOUT_SUCCESS':
+        console.log("Logout dispatched")
         return {
           ...state,
           user: null

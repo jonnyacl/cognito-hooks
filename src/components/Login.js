@@ -22,18 +22,19 @@ const Login = ({ routeProps }) => {
     routeProps.history.push("/");
   }
 
-  const signin = (email, password) => {
-    console.log("Login")
+  const signin = (evt) => {
+    console.log(`Login ${email}`)
+    evt.preventDefault();
     Auth.signIn(email, password)
       .then(u => {
-        // dispatch({
-        //   type: "LOGIN_SUCCESS",
-        //   user: {
-        //     email: u.attributes.email,
-        //     id: u.username,
-        //     key: u.signInUserSession.idToken.payload.devkey
-        //   }
-        // });
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          user: {
+            email: u.attributes.email,
+            id: u.username,
+            key: u.signInUserSession.idToken.payload.devkey
+          }
+        });
         console.log(u)
       }).catch(e => { 
         console.log(e) 
@@ -50,14 +51,14 @@ const Login = ({ routeProps }) => {
           <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
           <div className="portal-title">Dev Portal</div>
         </div>
-        <form onSubmit={() => signin(email, password)}>
+        <form onSubmit={signin}>
           <FormGroup controlId="email" bsSize="large">
             {email ? <ControlLabel>Email address</ControlLabel> : null}
             <FormControl
               autoFocus
               type="email"
               value={email}
-              onChange={(event) => { setEmail(event.target.value) }}
+              onChange={e => { setEmail(e.target.value) }}
               placeholder="Email address"
             />
           </FormGroup>
@@ -65,7 +66,7 @@ const Login = ({ routeProps }) => {
             {password ? <ControlLabel>Password</ControlLabel> : null}
             <FormControl
               value={password}
-              onChange={(event) => { setPassword(event.target.value) }}
+              onChange={e => { setPassword(e.target.value) }}
               type="password"
               placeholder="Your password"
             />
@@ -74,12 +75,12 @@ const Login = ({ routeProps }) => {
             <LoaderButton
               block
               bsSize="large"
-              disabled={!validateForm()}
+              disabled={!validateForm}
               type="submit"
               isLoading={isLoading}
               text="Sign in >"
               loadingText="Signing in…"
-              className={!validateForm() ? "signin-button-disabled" : null}
+              className={!validateForm ? "signin-button-disabled" : null}
             />
           </div>
           <div>
@@ -89,7 +90,10 @@ const Login = ({ routeProps }) => {
             </Link>
           </div>
           <div className="forgot-password">
-            <span onClick={() => { setShowPwReset(true); setResetLinkSent(false) }}>Forgotten your password? Click here to reset</span>
+            <span onClick={() => { 
+              setShowPwReset(true);
+              setResetLinkSent(false);
+            }}>Forgotten your password? Click here to reset</span>
           </div>
         </form>
         <div className="Login footer">
