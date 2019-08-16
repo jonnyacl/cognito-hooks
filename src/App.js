@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import Dashboard from "./components/Dashboard";
 import Login from './components/Login';
+import Signup from './components/Signup';
 import { UserContext } from './context/UserContext';
 import { Auth } from 'aws-amplify';
 import { withRouter, Route, Switch } from "react-router-dom";
@@ -10,34 +11,56 @@ function App() {
 
   const initialState = {
     title: 'RM Dashboard',
-    user: null,
-    userFetched: false
+    user: null
   }
 
   const reducer = (state, action) => {
     switch(action.type) {
-      case 'LOGIN_SUCCESS':
-      case 'CHECK_LOGIN_SUCCESS':
-      case 'SIGNUP_SUCCESS':
+      case 'SIGNUP_REQUEST':
+        Auth.signUp(action.email, action.password).then(
+          () => {
+            dispatch({ type: 'SIGNUP_REQUEST_SUCCESS' })
+          }
+        );
+        return { ...state }
+      case 'SIGNUP_REQUEST_SUCCESS':
         return {
           ...state,
-          user: action.user,
-          userFetched: true
+          showConfirmCode: true
+        }
+      case 'SIGNUP_CONFIRM_REQUEST':
+        Auth.confirmSignUp(action.email, action.code).then(u => {
+          dispatch({
+            type: "SIGNUP_CONFIRM_SUCCESS",
+            user: {
+              email: u.idToken.payload.email,
+              id: u.idToken.payload["cognito:username"],
+              key: u.idToken.payload.devkey
+            }
+          });
+        });
+        return { ...state }
+      case 'LOGIN_SUCCESS':
+      case 'CHECK_LOGIN_SUCCESS':
+      case 'SIGNUP_CONFIRM_SUCCESS':
+        return {
+          ...state,
+          user: action.user
         }
       case 'CHECK_LOGIN_FAIL':
         return {
-          ...state,
-          userFetched: true
+          ...state
         }
       case 'LOGOUT_REQUEST':
-          Auth
-            .signOut()
+          Auth.signOut()
             .then(() => {
               dispatch({
                 type: "LOGOUT_SUCCESS"
               });
             });
-          break;
+          return {
+            ...state
+          }
       case 'LOGOUT_SUCCESS':
         return {
           ...state,
@@ -48,41 +71,22 @@ function App() {
     }
   }
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  if (!state.userFetched) {
-    Auth.currentSession().then(u => {
-      if (u) {
-        dispatch({
-          type: "CHECK_LOGIN_SUCCESS",
-          user: {
-            email: u.idToken.payload.email,
-            id: u.idToken.payload["cognito:username"],
-            key: u.idToken.payload.devkey
-          }
-        });
-      } else {
-        dispatch({ type: "CHECK_LOGIN_FAIL" });
-      }
-    }).catch(e => {
-      console.log(e);
-      dispatch({ type: "CHECK_LOGIN_FAIL" });
-    });
-  }
   
   console.log("%cFractal - A curve or geometrical figure.","font-weight:bold; color:#ECB345");
   console.log("%cWe're hiring!","font-weight:bold; font-size: 1rem; color:#111");
   console.log("See our current openings: http://bit.ly/2FycQS2");
   return (
-    <UserContext.Provider value={dispatch}>
-      {/* <UserContext.Consumer> */}
+    <UserContext.Provider value={[state, dispatch]}>
         <Switch>
-          <Route path="/" exact component={Dashboard} props={ state.user } />
-          <Route path="/dashboard" exact component={Dashboard} props={ state.user } />
+          <Route path="/" exact component={Dashboard} />
+          <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/login" exact render={(routeProps) => (
-            <Login routeProps={routeProps} user={state.user} />
+            <Login routeProps={routeProps} />
+          )} />
+          <Route path="/signup" exact render={(routeProps) => (
+            <Signup routeProps={routeProps} />
           )} />
         </Switch>
-      {/* </UserContext.Consumer> */}
     </UserContext.Provider>
   );
 }

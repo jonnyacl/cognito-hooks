@@ -2,17 +2,15 @@ import React, { useState, useContext } from 'react';
 import LoaderButton from './LoaderButton';
 import { Link } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+import { FractalLogoSvg } from '../assets/svgrenderer';
+import { FractalFooter } from './FractalFooter';
 import { UserContext } from '../context/UserContext';
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import './Login.css';
 
-function Login({ routeProps, user }) {
+const Login = ({ routeProps }) => {
 
-  if (user) {
-    routeProps.history.push("/");
-  }
-
-  const dispatch = useContext(UserContext);
+  const [state, dispatch] = useContext(UserContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,62 +18,38 @@ function Login({ routeProps, user }) {
   const [resetLinkSent, setResetLinkSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateForm = () => {
-      return true;
+  if (state.user) {
+    routeProps.history.push("/");
   }
 
   const signin = (email, password) => {
-    console.log("Signin")
+    console.log("Login")
     Auth.signIn(email, password)
       .then(u => {
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          user: {
-            email: u.idToken.payload.email,
-            id: u.idToken.payload["cognito:username"],
-            key: u.idToken.payload.devkey
-          }
-        });
-      });
-  };
-
-  const signup = (email, password) => {
-    Auth.signup(email, password).then(() =>
-      {
-        dispatch({
-          type: "SIGNUP_PENDING"
-        });
-      }
-    )
-  };
-
-  const confirmSignup = (email, code) => {
-    Auth.confirmSignUp(email, code).then(u => {
-      dispatch({
-        type: "SIGNUP_SUCCESS",
-        user: {
-          email: u.idToken.payload.email,
-          id: u.idToken.payload["cognito:username"],
-          key: u.idToken.payload.devkey
-        }
-      });
-    });
-  };
-  
-  const sendPasswordResetEmail = email => {
-    return Auth.forgotPassword(email)
-      .then(() => {
+        // dispatch({
+        //   type: "LOGIN_SUCCESS",
+        //   user: {
+        //     email: u.attributes.email,
+        //     id: u.username,
+        //     key: u.signInUserSession.idToken.payload.devkey
+        //   }
+        // });
+        console.log(u)
+      }).catch(e => { 
+        console.log(e) 
       });
   };
   
-  const confirmPasswordReset = (code, password) => {
-    return Auth.forgotPasswordSubmit(code, password)
-      .then(() => {
-      });
-  };
+  const validateForm = () => {
+    return true;
+  }
 
   return (
     <div className="Login">
+        <div className="Login header--info">
+          <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
+          <div className="portal-title">Dev Portal</div>
+        </div>
         <form onSubmit={() => signin(email, password)}>
           <FormGroup controlId="email" bsSize="large">
             {email ? <ControlLabel>Email address</ControlLabel> : null}
@@ -118,6 +92,9 @@ function Login({ routeProps, user }) {
             <span onClick={() => { setShowPwReset(true); setResetLinkSent(false) }}>Forgotten your password? Click here to reset</span>
           </div>
         </form>
+        <div className="Login footer">
+          <FractalFooter />
+        </div>
     </div>
   );
 }
