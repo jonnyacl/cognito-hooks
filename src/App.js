@@ -11,16 +11,18 @@ import './styles/app.css';
 function App() {
 
   const initialUserState = {
-    user: null
+    user: null,
+    fetchNewUser: false,
+    newUser: null
   };
 
   const [userChecked, setUserChecked] = useState(false);
 
   const userReducer = (state, action) => UserReducer(state, action);
-
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
 
-  if (!userChecked) {
+  // only check user is logged in once on component load (and we have no logged-in user in global state)
+  if (!userState.user && !userChecked) {
     Auth.currentSession().then(res => {
       const idToken = res.getIdToken();
       const name = idToken.payload["cognito:username"];
@@ -36,7 +38,26 @@ function App() {
         console.log(e);
       }
       setUserChecked(true);
+      userDispatch({ type: 'CHECK_LOGIN_FAIL' });
     });
+  }
+
+  if (userState.fetchNewUser) {
+    Auth.signIn(userState.newUser.email, userState.newUser.pw)
+      .then(u => {
+        userDispatch({
+          type: "LOGIN_SUCCESS",
+          user: {
+            email: u.attributes.email,
+            id: u.username,
+            key: u.signInUserSession.idToken.payload.devkey
+          }
+        });
+        console.log(u)
+      }).catch(e => {
+        console.log(e);
+        userDispatch({ type: 'LOGIN_FAIL', e })
+      });
   }
 
   

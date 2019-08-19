@@ -11,6 +11,7 @@ import { Auth } from 'aws-amplify';
 function Signup({ routeProps }) {
 
   const [state, dispatch] = useContext(UserContext);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   if (state.user) {
     routeProps.history.push("/");
@@ -21,6 +22,7 @@ function Signup({ routeProps }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [codeResent, setCodeResent] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
+  const [signUpError, setSignUpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
@@ -31,19 +33,48 @@ function Signup({ routeProps }) {
     return true;
   }
 
-  const signup = (email, password) => {
-    console.log("Signup")
-    dispatch({ type: "SIGNUP_REQUEST", email, password })
+  const signup = (evt) => {
+    console.log(`Signing up ${email}...`);
+    evt.preventDefault();
+    setIsLoading(true);
+    Auth.signUp(email, password)
+      .then(u => {
+        setShowConfirmation(true);
+        setIsLoading(false);
+        dispatch({ type: "SIGNUP_SUCCESS", newUser: {
+          email: u.user.username,
+          id: u.userSub,
+          pw: password
+        }});
+      }).catch(e => {
+        console.log(e);
+        setIsLoading(false);
+        dispatch({ type: 'SIGNUP_FAIL', e });
+      });
   };
 
-  const sendConfirmation = () => {
-    console.log("confirm code")
-    dispatch({ type: "SIGNUP_CONFIRM_REQUEST", email, confirmationCode })
+  const sendConfirmation = (evt) => {
+    console.log("confirm code");
+    setIsLoading(true);
+    evt.preventDefault();
+    Auth.confirmSignUp(state.newUser.email, confirmationCode).then(c => {
+      console.log(`Sign up confirmed ${c}`)
+      setIsLoading(false);
+      dispatch({ type: 'SIGNUP_CONFIRM_SUCCESS' });
+    }).catch(() => {
+      console.log(`Failed to confirm code: ${confirmationCode}`)
+      setIsLoading(false);
+      dispatch({ type: "SIGNUP_CONFIRM_FAIL" });
+    });
   }
 
   const resendCode = () => {
+    setIsLoading(true);
     Auth.resendSignUp(email).then(() => {
-        setCodeResent(`Code resent to ${email}`)
+      setCodeResent(`Code resent to ${email}`);
+      setIsLoading(false);
+    }).catch(e => {
+      console.log(`Failed to resend code to email ${email}`);
     });
   }
 
@@ -85,12 +116,6 @@ function Signup({ routeProps }) {
               />
             </FormGroup>
             <div className="form-submit">
-              <div>
-                <div className="signup">Already have an account?</div>
-                <Link to={{ pathname: "/login" }}>
-                  <div className="signup here">Login here</div>
-                </Link>
-              </div>
               <LoaderButton
                 block
                 bsSize="large"
@@ -101,6 +126,16 @@ function Signup({ routeProps }) {
                 loadingText="Signing up…"
                 className={!validateForm() ? "signin-button-disabled" : null}
               />
+              <div>
+                <div className="signup">Already have an account?</div>
+                <Link to={{ pathname: "/login" }}>
+                  <div className="signup here">Login here</div>
+                </Link>
+              </div>
+              <div>
+                <div className="signup">Already received a code?</div>
+                <div onClick={() => { setShowConfirmation(true) }} className="signup here">Enter Code</div>
+              </div>
             </div>
           </form>
         </div>
@@ -117,7 +152,9 @@ function Signup({ routeProps }) {
         <div className="Login header signup">
           <div className="Login header--info">
             <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
-            <div className="portal-title">Dev Portal</div>
+          </div>
+          <div>
+            <div className="code-confirm">Please check your email for the code</div>
           </div>
           <form onSubmit={sendConfirmation}>
             <FormGroup controlId="confirmationCode" bsSize="large">
@@ -131,13 +168,6 @@ function Signup({ routeProps }) {
               />
             </FormGroup>
             <div className="form-submit verify">
-              {codeResent ? codeResent:
-              <span onClick={resendCode}>Click here to resend the confirmation code</span>}
-            </div>
-            <div className="form-submit verify">
-              <div>
-                <div className="code-confirm">Please check your email for the code</div>
-              </div>
               <LoaderButton
                 block
                 bsSize="large"
@@ -148,6 +178,15 @@ function Signup({ routeProps }) {
                 loadingText="Verifying…"
                 className={!validateConfirmationForm() ? "signin-button-disabled" : null}
               />
+              <div className="form-submit verify">
+                {codeResent.length > 0 ? codeResent:
+                <button onClick={resendCode}>Click here to resend the confirmation code</button>}
+              </div>
+            </div>
+            <div>
+              <button onClick={() => { setShowConfirmation(false) }}>
+                <div className="signup here">Back to signup</div>
+              </button>
             </div>
           </form>
         </div>
@@ -155,13 +194,10 @@ function Signup({ routeProps }) {
     );
   }
 
-  return (
-    <div>
-      {state.showConfirmCode
-        ? renderConfirmationForm()
-        : renderForm()}
-    </div>
-  );
+  if (showConfirmation) {
+    return renderConfirmationForm();
+  }
+  return renderForm();
 
   
 }

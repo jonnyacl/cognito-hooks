@@ -31,7 +31,8 @@ function Dashboard() {
   }
   return (
     <div className="Dashboard">
-        <Link to="/login">Login</Link>
+      <div><Link to="/login">Login</Link></div>
+      <div><Link to="/signup">Signup</Link></div>
     </div>
   );
 }

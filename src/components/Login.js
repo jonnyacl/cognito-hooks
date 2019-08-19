@@ -16,6 +16,7 @@ const Login = ({ routeProps }) => {
   const [password, setPassword] = useState("");
   const [showPwReset, setShowPwReset] = useState(false);
   const [resetLinkSent, setResetLinkSent] = useState(false);
+  const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   if (state.user) {
@@ -36,8 +37,9 @@ const Login = ({ routeProps }) => {
           }
         });
         console.log(u)
-      }).catch(e => { 
-        console.log(e) 
+      }).catch(e => {
+        console.log(e);
+        dispatch({ type: 'LOGIN_FAIL', e })
       });
   };
   
@@ -49,7 +51,6 @@ const Login = ({ routeProps }) => {
     <div className="Login">
         <div className="Login header--info">
           <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
-          <div className="portal-title">Dev Portal</div>
         </div>
         <form onSubmit={signin}>
           <FormGroup controlId="email" bsSize="large">
