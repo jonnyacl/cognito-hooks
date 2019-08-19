@@ -7,7 +7,6 @@ import { UserContext } from './context/UserContext';
 import { UserReducer } from './reducers/UserReducer';
 import { withRouter, Route, Switch } from "react-router-dom";
 import './styles/app.css';
-import { dispatch } from 'rxjs/internal/observable/range';
 
 function App() {
 
