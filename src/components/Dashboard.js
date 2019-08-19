@@ -23,9 +23,9 @@ function Dashboard() {
   if (state.user) {
     return (
       <div className="Dashboard">
-          <div>{state.user.email}</div>
-          <div>{state.user.id}</div>
-          <Button onClick={logout}>Logout</Button>
+        <div>{state.user.email}</div>
+        <div>{state.user.id}</div>
+        <Button onClick={logout}>Logout</Button>
       </div>
     );
   }
