@@ -50,6 +50,7 @@ function Signup({ routeProps }) {
         console.log(e);
         setIsLoading(false);
         dispatch({ type: 'SIGNUP_FAIL', e });
+        setSignUpError(`Failed to signup: ${e}`);
       });
   };
 
@@ -61,10 +62,11 @@ function Signup({ routeProps }) {
       console.log(`Sign up confirmed ${c}`)
       setIsLoading(false);
       dispatch({ type: 'SIGNUP_CONFIRM_SUCCESS' });
-    }).catch(() => {
-      console.log(`Failed to confirm code: ${confirmationCode}`)
+    }).catch((e) => {
+      console.log(`Failed to confirm code: ${confirmationCode}`);
       setIsLoading(false);
       dispatch({ type: "SIGNUP_CONFIRM_FAIL" });
+      setSignUpError(`Failed to confirm code: ${e}`);
     });
   }
 
@@ -75,7 +77,19 @@ function Signup({ routeProps }) {
       setIsLoading(false);
     }).catch(e => {
       console.log(`Failed to resend code to email ${email}`);
+      setSignUpError(`Failed to resend code: ${e}`);
     });
+  }
+
+  const renderErrors = () => {
+    if (signUpError && signUpError.length > 0) {
+      return(
+        <div className="Login-Error">
+          {signUpError}
+        </div>
+      );
+    }
+    return null;
   }
 
   const renderForm = () => {
@@ -139,6 +153,7 @@ function Signup({ routeProps }) {
             </div>
           </form>
         </div>
+        {renderErrors()}
         <div className="Login footer">
           <FractalFooter />
         </div>
@@ -189,6 +204,10 @@ function Signup({ routeProps }) {
               </button>
             </div>
           </form>
+        </div>
+        {renderErrors()}
+        <div className="Login footer">
+          <FractalFooter />
         </div>
       </div>
     );

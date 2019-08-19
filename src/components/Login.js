@@ -26,6 +26,7 @@ const Login = ({ routeProps }) => {
   const signin = (evt) => {
     console.log(`Login ${email}`)
     evt.preventDefault();
+    setIsLoading(true);
     Auth.signIn(email, password)
       .then(u => {
         dispatch({
@@ -37,14 +38,28 @@ const Login = ({ routeProps }) => {
           }
         });
         console.log(u)
+        setIsLoading(false);
       }).catch(e => {
         console.log(e);
         dispatch({ type: 'LOGIN_FAIL', e })
+        setLoginError(`Failed to login: ${e}`);
+        setIsLoading(false);
       });
   };
   
   const validateForm = () => {
     return true;
+  }
+
+  const renderErrors = () => {
+    if (loginError && loginError.length > 0) {
+      return(
+        <div className="Login-Error">
+          {loginError}
+        </div>
+      );
+    }
+    return null;
   }
 
   return (
@@ -97,6 +112,7 @@ const Login = ({ routeProps }) => {
             }}>Forgotten your password? Click here to reset</span>
           </div>
         </form>
+        {renderErrors()}
         <div className="Login footer">
           <FractalFooter />
         </div>
