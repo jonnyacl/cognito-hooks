@@ -59,11 +59,6 @@ function App() {
         userDispatch({ type: 'LOGIN_FAIL', e })
       });
   }
-
-  
-  console.log("%cFractal - A curve or geometrical figure.","font-weight:bold; color:#ECB345");
-  console.log("%cWe're hiring!","font-weight:bold; font-size: 1rem; color:#111");
-  console.log("See our current openings: http://bit.ly/2FycQS2");
   return (
     <UserContext.Provider value={[userState, userDispatch]}>
       <Switch>
