@@ -1,0 +1,8 @@
+.Auth {
+
+}
+
+.Auth--forgot-password span {
+    cursor: pointer;
+    text-decoration: underline;
+}
