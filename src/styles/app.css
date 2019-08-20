@@ -1,21 +1,3 @@
-@font-face {
-    font-family: "Primary-Font";
-    src: url("../fonts/CircularStd-Book.woff2") format("woff2"), url("../fonts/CircularStd-Book.woff") format("woff"), url("../fonts/CircularStd-Book.ttf") format("truetype");
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: "Secondary-Font";
-    src: url("../fonts/CircularStd-Bold.woff2") format("woff2"), url("../fonts/CircularStd-Bold.woff") format("woff"), url("../fonts/CircularStd-Bold.ttf") format("truetype");
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: "Tertiary-Font";
-    src: url("../fonts/CircularStd-Book.woff2") format("woff2"), url("../fonts/CircularStd-Book.woff") format("woff"), url("../fonts/CircularStd-Book.ttf") format("truetype");
-    font-weight: normal;
-}
-
 #root {
     z-index: 1;
     position: relative; 
@@ -28,7 +10,6 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family: "Primary-Font";
     font-size: 1rem;
     line-height: 1.5;
     max-width: 100vw;

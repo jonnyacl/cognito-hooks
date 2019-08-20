@@ -3,7 +3,7 @@ import LoaderButton from './LoaderButton';
 import { Link } from "react-router-dom";
 import { UserContext } from '../context/UserContext';
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import './Login.css';
+import './Auth.css';
 import { Auth } from 'aws-amplify';
 
 function Signup({ routeProps }) {
@@ -82,7 +82,7 @@ function Signup({ routeProps }) {
   const renderErrors = () => {
     if (signUpError && signUpError.length > 0) {
       return(
-        <div className="Login-Error">
+        <div className="Auth-Error">
           {signUpError}
         </div>
       );
@@ -92,10 +92,10 @@ function Signup({ routeProps }) {
 
   const renderForm = () => {
     return (
-      <div>
-        <div className="Login header">
-          <div className="Login header--info">
-            <div className="title">Signup</div>
+      <div className="Auth">
+        <div className="Auth header">
+          <div className="Auth header--info">
+            <h3>Signup</h3>
           </div>
           <form onSubmit={signup}>
             <FormGroup controlId="email" bsSize="large">
@@ -158,7 +158,7 @@ function Signup({ routeProps }) {
   const renderConfirmationForm = () => {
     return (
       <div>
-        <div className="Login header signup">
+        <div className="Auth header signup">
           <div>
             <div className="code-confirm">Please check your email for the code</div>
           </div>

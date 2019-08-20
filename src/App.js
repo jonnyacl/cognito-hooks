@@ -1,10 +1,10 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState } from 'react'; 
 import Login from './components/Login';
 import Signup from './components/Signup';
 import { Auth } from 'aws-amplify';
 import { UserContext } from './context/UserContext';
 import { UserReducer } from './reducers/UserReducer';
-import { withRouter, Route, Switch } from "react-router-dom";
+import { Link, withRouter, Route, Switch } from "react-router-dom";
 import './styles/app.css';
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   };
 
   const [userChecked, setUserChecked] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const userReducer = (state, action) => UserReducer(state, action);
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
@@ -28,7 +29,6 @@ function App() {
       const user = {
         id: name,
         email: idToken.payload.email,
-        key: idToken.payload.devkey,
       }
       userDispatch({ type: 'CHECK_LOGIN_SUCCESS', user });
       setUserChecked(true);
@@ -48,8 +48,7 @@ function App() {
           type: "LOGIN_SUCCESS",
           user: {
             email: u.attributes.email,
-            id: u.username,
-            key: u.signInUserSession.idToken.payload.devkey
+            id: u.username
           }
         });
         console.log(u)
@@ -58,9 +57,26 @@ function App() {
         userDispatch({ type: 'LOGIN_FAIL', e })
       });
   }
+
+  const logout = (evt) => {
+    setLoggingOut(true);
+    evt.preventDefault();
+    Auth.signOut().then(() => {
+      userDispatch({ type: "LOGOUT_SUCCESS" });
+      setLoggingOut(false);
+    }).catch(() => {
+      userDispatch({ type: "LOGOUT_FAIL" });
+      setLoggingOut(false);
+    })
+  }
+
   return (
     <UserContext.Provider value={[userState, userDispatch]}>
       <Switch>
+        {/* Delete this route for your own root page component */}
+        <Route path="/" exact render={() => (
+          userState.user ? loggingOut ? <button>Logging out...</button> : <button onClick={logout}>Logout</button> : <div><div><Link to="/login">Login</Link></div><div><Link to="/signup">Signup</Link></div></div>
+        )} />
         <Route path="/login" exact render={(routeProps) => (
           <Login routeProps={routeProps} />
         )} />
