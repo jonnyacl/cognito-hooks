@@ -1,9 +1,7 @@
 import React, { useState, useContext } from 'react';
 import LoaderButton from './LoaderButton';
 import { Link } from "react-router-dom";
-import { FractalLogoSvg } from "../assets/svgrenderer";
 import { UserContext } from '../context/UserContext';
-import { FractalFooter } from './FractalFooter';
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import './Login.css';
 import { Auth } from 'aws-amplify';
@@ -97,8 +95,7 @@ function Signup({ routeProps }) {
       <div>
         <div className="Login header">
           <div className="Login header--info">
-            <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
-            <div className="portal-title">Dev Portal</div>
+            <div className="title">Signup</div>
           </div>
           <form onSubmit={signup}>
             <FormGroup controlId="email" bsSize="large">
@@ -154,9 +151,6 @@ function Signup({ routeProps }) {
           </form>
         </div>
         {renderErrors()}
-        <div className="Login footer">
-          <FractalFooter />
-        </div>
       </div>
     );
   }
@@ -165,9 +159,6 @@ function Signup({ routeProps }) {
     return (
       <div>
         <div className="Login header signup">
-          <div className="Login header--info">
-            <div className="portal-logo">{FractalLogoSvg(null, 100)}</div>
-          </div>
           <div>
             <div className="code-confirm">Please check your email for the code</div>
           </div>
@@ -206,9 +197,6 @@ function Signup({ routeProps }) {
           </form>
         </div>
         {renderErrors()}
-        <div className="Login footer">
-          <FractalFooter />
-        </div>
       </div>
     );
   }

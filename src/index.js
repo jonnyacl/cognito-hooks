@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import Amplify from 'aws-amplify';
-import config from './config';
+import config from './config-old';
 import { BrowserRouter } from "react-router-dom";
 
 Amplify.configure({
@@ -12,18 +12,7 @@ Amplify.configure({
       userPoolId: config.cognito.USER_POOL_ID,
       identityPoolId: config.cognito.IDENTITY_POOL_ID,
       userPoolWebClientId: config.cognito.APP_CLIENT_ID
-    },
-    API: {
-      endpoints: [
-        {
-          name: "portfolio",
-          endpoint: `${config.api.endpoint}/portfolio`,
-          region: config.api.region
-        },
-      ]
     }
 });
 
-ReactDOM.render(<BrowserRouter>
-    <App />
-  </BrowserRouter>, document.getElementById('root'));
+ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
