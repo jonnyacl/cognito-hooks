@@ -1,5 +1,4 @@
 import React, { useReducer, useState } from 'react';
-import Dashboard from "./components/Dashboard";
 import Login from './components/Login';
 import Signup from './components/Signup';
 import { Auth } from 'aws-amplify';
@@ -62,8 +61,6 @@ function App() {
   return (
     <UserContext.Provider value={[userState, userDispatch]}>
       <Switch>
-        <Route path="/" exact component={Dashboard} />
-        <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/login" exact render={(routeProps) => (
           <Login routeProps={routeProps} />
         )} />
