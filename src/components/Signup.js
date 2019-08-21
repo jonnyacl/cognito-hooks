@@ -133,7 +133,7 @@ function Signup({ routeProps }) {
                 disabled={!validateForm()}
                 type="submit"
                 isLoading={isLoading}
-                text="Signup"
+                text="Signup >"
                 loadingText="Signing up…"
                 className={!validateForm() ? "signin-button-disabled" : null}
               />
@@ -145,7 +145,7 @@ function Signup({ routeProps }) {
               </div>
               <div>
                 <div className="signup">Already received a code?</div>
-                <div onClick={() => { setShowConfirmation(true) }} className="signup here">Enter Code</div>
+                <div onClick={() => { setShowConfirmation(true) }} className="Auth--signup-here">Enter Code</div>
               </div>
             </div>
           </form>
@@ -186,13 +186,11 @@ function Signup({ routeProps }) {
               />
               <div className="form-submit verify">
                 {codeResent.length > 0 ? codeResent:
-                <button onClick={resendCode}>Click here to resend the confirmation code</button>}
+                <button onClick={resendCode}>Resend code</button>}
               </div>
             </div>
             <div>
-              <button onClick={() => { setShowConfirmation(false) }}>
-                <div className="signup here">Back to signup</div>
-              </button>
+              <div onClick={() => { setShowConfirmation(false) }} className="Auth--signup-here">Back to signup</div>
             </div>
           </form>
         </div>

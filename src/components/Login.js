@@ -43,7 +43,8 @@ const Login = ({ routeProps }) => {
         dispatch({ type: 'LOGIN_FAIL', e })
         setLoginError(`Failed to login: ${e}`);
         setIsLoading(false);
-      });
+      }
+    );
   };
 
   const resetPw = (evt) => {
