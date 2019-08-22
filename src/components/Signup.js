@@ -35,7 +35,11 @@ function Signup({ routeProps }) {
     console.log(`Signing up ${email}...`);
     evt.preventDefault();
     setIsLoading(true);
-    Auth.signUp(email, password)
+    Auth.signUp({
+        username: email,
+        password: password,
+        email
+      })
       .then(u => {
         setShowConfirmation(true);
         setIsLoading(false);
@@ -48,7 +52,7 @@ function Signup({ routeProps }) {
         console.log(e);
         setIsLoading(false);
         dispatch({ type: 'SIGNUP_FAIL', e });
-        setSignUpError(`Failed to signup: ${e}`);
+        setSignUpError(`Failed to signup: ${e.message}`);
       });
   };
 
@@ -64,7 +68,7 @@ function Signup({ routeProps }) {
       console.log(`Failed to confirm code: ${confirmationCode}`);
       setIsLoading(false);
       dispatch({ type: "SIGNUP_CONFIRM_FAIL" });
-      setSignUpError(`Failed to confirm code: ${e}`);
+      setSignUpError(`Failed to confirm code: ${e.message}`);
     });
   }
 
@@ -75,7 +79,7 @@ function Signup({ routeProps }) {
       setIsLoading(false);
     }).catch(e => {
       console.log(`Failed to resend code to email ${email}`);
-      setSignUpError(`Failed to resend code: ${e}`);
+      setSignUpError(`Failed to resend code: ${e.message}`);
     });
   }
 

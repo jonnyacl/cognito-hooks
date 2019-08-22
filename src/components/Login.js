@@ -41,7 +41,7 @@ const Login = ({ routeProps }) => {
       }).catch(e => {
         console.log(e);
         dispatch({ type: 'LOGIN_FAIL', e })
-        setLoginError(`Failed to login: ${e}`);
+        setLoginError(`Failed to login: ${e.message}`);
         setIsLoading(false);
       }
     );
