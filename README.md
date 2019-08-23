@@ -16,6 +16,8 @@ You will be prompted to enter
  - App client ID
  - Identity Pool ID
 
+Cognito and API endpoints for the app can be created by the [Serverless-Create-Apps](https://gitlab.com/fractal-frontend/serverless-create-apps) project. Then the output is passed into this setup command to configure with Cognito.
+
 For guidance on setting up Cognito: 
 
 https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-getting-started.html
