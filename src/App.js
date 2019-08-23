@@ -11,6 +11,7 @@ function App() {
 
   const initialUserState = {
     user: null,
+    appKey: null,
     fetchNewUser: false,
     newUser: null
   };
@@ -30,7 +31,8 @@ function App() {
         id: name,
         email: idToken.payload.email,
       }
-      userDispatch({ type: 'CHECK_LOGIN_SUCCESS', user });
+      const appKey = idToken.payload.appkey;
+      userDispatch({ type: 'CHECK_LOGIN_SUCCESS', user, appKey });
       setUserChecked(true);
     }).catch((e) => {
       if (e !== 'No current user') {

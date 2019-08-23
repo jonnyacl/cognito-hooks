@@ -15,6 +15,7 @@ export const UserReducer = (state, action) => {
             return {
                 ...state,
                 user: action.user,
+                appKey: action.appKey,
                 newUser: null,
                 fetchNewUser: false
             };
