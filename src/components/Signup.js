@@ -149,7 +149,10 @@ function Signup({ routeProps }) {
               </div>
               <div>
                 <div className="signup">Already received a code?</div>
-                <div onClick={() => { setShowConfirmation(true) }} className="Auth--signup-here">Enter Code</div>
+                <div onClick={() => {
+                  setShowConfirmation(true);
+                  setSignUpError("");
+                }} className="Auth--signup-here">Enter Code</div>
               </div>
             </div>
           </form>
@@ -194,7 +197,10 @@ function Signup({ routeProps }) {
               </div>
             </div>
             <div>
-              <div onClick={() => { setShowConfirmation(false) }} className="Auth--signup-here">Back to signup</div>
+              <div onClick={() => { 
+                setShowConfirmation(false);
+                setSignUpError("");
+                }} className="Auth--signup-here">Back to signup</div>
             </div>
           </form>
         </div>

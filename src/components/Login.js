@@ -186,6 +186,7 @@ const Login = ({ routeProps }) => {
         }
         <div className="Auth--forgot-password"><span onClick={() => { 
           setShowPwReset(false);
+          setLoginError("");
           setResetLinkSent(false);
         }}>Back to Login</span></div>
       </div>
@@ -243,6 +244,7 @@ const Login = ({ routeProps }) => {
             Forgotten your password? <span onClick={() => { 
               setShowPwReset(true);
               setResetLinkSent(false);
+              setLoginError("");
             }}>Click here to reset</span>
           </div>
         </form>
