@@ -1,6 +1,6 @@
 ## Simple React Hooks app with user auth
 
-Using Cognito for user auth, this is a basic app ready to build an actual with user authentication already setup
+Using Cognito for user auth, this is a basic app ready to build a full app with user authentication already setup
 
 ### Getting started
 
